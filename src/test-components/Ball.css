@@ -1,0 +1,41 @@
+* {
+    box-sizing: border-box;
+  }
+  .animation-container {
+    height: 100%;
+    position: relative;
+  }
+  .tennis-ball {
+    position: absolute;
+    overflow: hidden;
+    height: 7.5em;
+    width: 7.5em;
+    top: 50%;
+    left: 50%;
+    border-radius: 50%;
+    background-color: #cc0;
+    background: radial-gradient(ellipse at center, #cc0 0%, darken(#cc0, 15) 100%);
+    box-sizing: border-box;
+    transform: translate(-50%, -50%) rotate(30deg);
+ }
+  .tennis-ball:before, .tennis-ball:after {
+    content: '';
+    position: absolute;
+    display: block;
+    height: 100%;
+    width: 100%;
+    border: solid 0.5em #fff;
+    border-radius: 50%;
+    box-sizing: border-box;
+ }
+  .tennis-ball:before {
+    right: 70%;
+ }
+  .tennis-ball:after {
+    left: 70%;
+ }
+
+  .background {
+    height: 250px;
+    padding: 16px 0 56px;
+  }

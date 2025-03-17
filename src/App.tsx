@@ -1,136 +1,204 @@
-import React from 'react';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Clock, Check, Zap } from 'lucide-react';
-const PricingPage = () => {
-  const features = {
-    basic: [
-      "Up to 10 projects",
-      "Basic analytics",
-      "24/7 support",
-      "1 team member"
-    ],
-    pro: [
-      "Up to 50 projects",
-      "Advanced analytics",
-      "Priority support",
-      "5 team members",
-      "Custom integrations"
-    ],
-    enterprise: [
-      "Unlimited projects",
-      "Enterprise analytics",
-      "Dedicated support team",
-      "Unlimited team members",
-      "Custom integrations",
-      "SLA guarantee",
-      "Custom training"
-    ]
-  };
-  return (
-    <div className="w-full max-w-6xl mx-auto p-4">
-      <div className="text-center mb-8">
-        <h1 className="text-4xl font-bold mb-4">Simple, transparent pricing</h1>
-        <p className="text-lg text-gray-600">Choose the plan that's right for you</p>
-        <div className="flex items-center justify-center mt-4 gap-2">
-          <Clock className="h-5 w-5 text-red-500" />
-          <p className="text-red-500 font-semibold">Special offer ends in 48 hours</p>
-        </div>
-      </div>
-      <div className="grid md:grid-cols-3 gap-8">
-        {/* Basic Plan */}
-        <Card className="relative">
-          <CardHeader>
-            <CardTitle>Basic</CardTitle>
-            <CardDescription>For individuals getting started</CardDescription>
-            <div className="mt-4">
-              <span className="text-3xl font-bold">$29</span>
-              <span className="text-gray-500">/month</span>
-            </div>
-          </CardHeader>
-          <CardContent>
-            <ul className="space-y-3">
-              {features.basic.map((feature, index) => (
-                <li key={index} className="flex items-center gap-2">
-                  <Check className="h-5 w-5 text-green-500" />
-                  <span>{feature}</span>
-                </li>
-              ))}
-            </ul>
-          </CardContent>
-          <CardFooter>
-            <Button className="w-full">Get Started</Button>
-          </CardFooter>
-        </Card>
-        {/* Pro Plan */}
-        <Card className="relative">
-          <CardHeader>
-            <div className="flex justify-between items-start">
-              <div>
-                <CardTitle>Pro</CardTitle>
-                <CardDescription>For growing teams</CardDescription>
-              </div>
-              <Badge className="bg-blue-500">Popular</Badge>
-            </div>
-            <div className="mt-4">
-              <span className="text-3xl font-bold">$79</span>
-              <span className="text-gray-500">/month</span>
-            </div>
-          </CardHeader>
-          <CardContent>
-            <ul className="space-y-3">
-              {features.pro.map((feature, index) => (
-                <li key={index} className="flex items-center gap-2">
-                  <Check className="h-5 w-5 text-green-500" />
-                  <span>{feature}</span>
-                </li>
-              ))}
-            </ul>
-          </CardContent>
-          <CardFooter>
-            <Button className="w-full bg-blue-500 hover:bg-blue-600">Upgrade to Pro</Button>
-          </CardFooter>
-        </Card>
-        {/* Enterprise Plan */}
-        <Card className="relative border-2 border-purple-500 shadow-lg">
-          <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-            <Badge className="bg-purple-500">
-              <Zap className="h-4 w-4 mr-1" />
-              Best Value
-            </Badge>
-          </div>
-          <CardHeader>
-            <CardTitle>Enterprise</CardTitle>
-            <CardDescription>For large organizations</CardDescription>
-            <div className="mt-4">
-              <div className="flex items-center gap-2">
-                <span className="text-3xl font-bold">$199</span>
-                <span className="text-gray-500">/month</span>
-                <Badge variant="outline" className="ml-2">Save 20%</Badge>
-              </div>
-              <p className="text-sm text-red-500 mt-2">Special offer ends soon!</p>
-            </div>
-          </CardHeader>
-          <CardContent>
-            <ul className="space-y-3">
-              {features.enterprise.map((feature, index) => (
-                <li key={index} className="flex items-center gap-2">
-                  <Check className="h-5 w-5 text-green-500" />
-                  <span>{feature}</span>
-                </li>
-              ))}
-            </ul>
-          </CardContent>
-          <CardFooter>
-            <Button className="w-full bg-purple-500 hover:bg-purple-600">Contact Sales</Button>
-          </CardFooter>
-        </Card>
-      </div>
-      <div className="mt-8 text-center">
-        <p className="text-sm text-gray-500">All plans include our 30-day money-back guarantee</p>
-      </div>
-    </div>
-  );
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { useEffect, useState } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import { useDispatch, useSelector } from 'react-redux';
+import { loginSuccess, selectUserLoggedIn } from './main.tsx';
+import LoginForm from './components/user-components/LoginForm.tsx';
+import Home from './components/home';
+import Logout from './components/logout';
+import NavBar from './components/navigation/NavBar';
+import CreateLeagueForm from './components/LeagueComponents/CreateLeagueForm.tsx';
+//import io from 'socket.io-client';
+import IdleTimer from './components/IdleTimer';
+import ChatRoomList from './ChatComponents/ChatRoomList';
+import Dashboard from "./components/DashboardComponents/Dashboard";
+import "./App.css";
+// import RegistrationPageUpdated from './components/user-components/RegistrationPageUpdated.tsx';
+import EmailVerifyPage from "./components/EmailVerifyPage.js";
+import LeaguesPage from "./components/LeagueComponents/LeaguePage.tsx";
+//import { useJsApiLoader } from '@react-google-maps/api';
+// import Map from "./components/Map.jsx";
+// import { APIProvider } from '@vis.gl/react-google-maps';
+//import libraries from "../src/components/Library.ts";
+import ErrorPage from './components/ErrorComponents/PageDoesNotExist.tsx';
+import { LoadingProvider } from '../src/LoadingContext/LoadingContext.tsx';
+import { ConnectionManager } from './components/SocketManagers/ConnectionManager';
+import { GoogleOAuthProvider } from '@react-oauth/google';
+// Import the Theme Provider
+import { ThemeProvider } from '../src/theme/ThemeProviderShad.tsx';
+import AdminDashboard from './components/AdminComponents/AdminDashboard.tsx';
+//import SocketTest from './SocketTest.jsx';
+
+const App = () => {
+
+    //const googleMapsApiKey: string = process.env.REACT_APP_GOOGLE_MAPS_API!;
+
+    // const { isLoaded } = useJsApiLoader({
+    //     id: 'google-map-script',
+    //     googleMapsApiKey: googleMapsApiKey, // Replace with your actual API key
+    //     libraries
+    // });
+
+    const isLoggedIn = useSelector(selectUserLoggedIn);
+
+    const dispatch = useDispatch();
+
+    // get user city from either db or redux state
+    const [city, setCity] = useState<any>('austin');
+    // const [citySearch, setCitySearch] = useState<any>('');
+
+    // const [coordinates, setCoordinates] = useState<any>(null);
+      
+    // const [markers, setMarkers] = useState<any>([]);
+
+    // const getCityCoordinates = async (city: string) => {
+    //     const geocoder = new window.google.maps.Geocoder();
+
+    //     return new Promise((resolve, reject) => {
+
+    //         geocoder.geocode({ address: city }, (results: any, status: string) => {
+    //             if (status === 'OK' && results[0]) {
+    //               resolve({
+    //                   lat: results[0].geometry.location.lat(),
+    //                   lng: results[0].geometry.location.lng(),
+    //               });
+    //             } else {
+    //               reject('City not found');
+    //             }
+    //         });
+    //     });
+    // };
+
+    const handleSubmit = (e:any) => {
+      e.preventDefault();
+      //setCitySearch(city)
+    };
+
+    // working fine just commneted out so i dont use the api every app load
+    // eventually move to "add your home court"
+    
+  // useEffect(() => {
+  //   if (!isLoaded || !window.google) return;
+
+    
+  //   const fetchCoordinates = async () => {
+  //       try {
+  //         const coordinates = await getCityCoordinates(city);
+  //         console.log('Coordinates:', coordinates);
+  //         setCoordinates(coordinates);
+  //         // You can use coordinates here, for example, setting map center
+  //       } catch (error) {
+  //         console.error(error);
+  //       }
+  //     };
+  
+  //     fetchCoordinates();
+
+  //   const service = new window.google.maps.places.PlacesService(new window.google.maps.Map(document.createElement("div")));
+  //   service.textSearch(
+  //     {
+  //       query: `public tennis or pickleball courts in ${city}`,
+  //     },
+  //     (results, status) => {
+  //       if (status === window.google.maps.places.PlacesServiceStatus.OK) {
+  //         console.log("marker results from search: ", results)
+  //         setMarkers(results);
+  //       }
+  //     }
+  //   );
+
+  // }, [city, isLoaded]);
+    
+    useEffect(()=>{
+
+        const persistedUser:any = localStorage.getItem('userData');
+
+        // const isValidated = checkTokenExpiration();
+        
+        // if there is a persisted user data
+        if (persistedUser) {
+          dispatch(loginSuccess(JSON.parse(persistedUser)));
+        }
+        // }
+        // else{
+        //     //<Navigate to="/post-login" />
+        //     dispatch(logout())
+        // }
+
+    },[dispatch]);
+
+    const checkSessionData = async () => {
+
+      let response = await fetch("/session-data", {
+        method: "GET"
+      });
+
+      response = await response.json();
+
+      console.log("sessionData: ", response)
+      return response;
+
+    }
+
+    return (
+      <ThemeProvider defaultTheme="system" storageKey="app-theme">
+        <GoogleOAuthProvider clientId={process.env.VITE_GOOGLE_OAUTH_FIREBASE_CLIENT!}>
+          <Router>
+            <LoadingProvider>
+              <NavBar/>
+
+              {/* <SocketTest/> */}
+              
+              <Routes>
+                  <Route path="/" element={<Home />}/>
+                  <Route path="/dashboard" element={isLoggedIn ? <Dashboard /> : <Navigate to="/login" />} />
+                  <Route path="/leagues" element={isLoggedIn ? <LeaguesPage /> : <Navigate to="/login" />} />
+                  <Route path="/create-league" element={<CreateLeagueForm />} />
+                  <Route path="/login" element={<LoginForm />}/>
+                  <Route path="/logout" element={<Logout />}/>
+                  {/* <Route path="/registration" element={<RegistrationPageUpdated />}/> */}
+                  <Route path="/verify/:token" element={<EmailVerifyPage />}/>
+                  <Route path="/admin" element={<AdminDashboard />}/>
+                  <Route path="*" element={<ErrorPage />}/>
+              </Routes>
+              {/* 
+                -- used to test socket connection --
+                <ConnectionState isConnected={ isConnected } />
+                <Events events={ fooEvents } />
+                <ConnectionManager /> 
+              */}
+              {isLoggedIn ? <ChatRoomList/> : null}
+              {isLoggedIn ? <IdleTimer/> : null}
+
+              <ConnectionManager/>
+
+              <form onSubmit={handleSubmit}>
+                <label>
+                  City:
+                  <input type="text" value={city} onChange={(e) => setCity(e.target.value)} />
+                </label>
+                <button type="submit">Search</button>
+              </form>
+
+              <button onClick={checkSessionData}>check session data</button>
+              {/* <APIProvider 
+                apiKey={process.env.REACT_APP_GOOGLE_MAPS_API} 
+                onLoad={() => {
+                        console.log('Maps API has loaded.');
+                    }
+                }
+                >
+                    {coordinates !== null ? 
+                        <Map center={coordinates} markers={markers}/>
+                        : null
+                    }
+                    
+                </APIProvider> */}
+          </LoadingProvider>
+          </Router>
+        </GoogleOAuthProvider>
+      </ThemeProvider>
+    );
 };
-export default PricingPage;
+
+export default App;

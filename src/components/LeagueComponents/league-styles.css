@@ -1,0 +1,14 @@
+
+.icon{
+    font-size: 24px;
+    margin-bottom: -6px;
+}
+
+.table-cell-custom{
+    border-bottom: none !important;
+    border-right: 1px solid lightgray;
+}
+
+.table-cell-custom-parent{
+    border-right: 1px solid lightgray;
+}

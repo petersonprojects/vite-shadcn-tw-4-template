@@ -1,0 +1,10 @@
+
+  .my-carousel-wrapper {
+    max-width: 800px; /* Match the max image width */
+    /*overflow: hidden;*/
+  }
+
+  .carousel-centerer {
+    display: flex;
+    justify-content: center;
+  }

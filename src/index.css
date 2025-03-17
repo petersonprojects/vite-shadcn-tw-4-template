@@ -4,6 +4,20 @@
 
 @custom-variant dark (&:is(.dark *));
 
+[data-theme="light"] {
+  --primary: #1976d2; /* MUI primary blue */
+  --background: #ffffff; /* white */
+  --text: #ffffff; /* white text */
+  --hover: #1565c0; /* darker blue for hover */
+}
+
+[data-theme="dark"] {
+  --primary: #424242; /* dark gray */
+  --background: #303030; /* darker gray */
+  --text: #ffffff; /* white text */
+  --hover: #616161; /* lighter gray for hover */
+}
+
 :root {
   --background: hsl(0 0% 100%);
   --foreground: hsl(0 0% 3.9%);

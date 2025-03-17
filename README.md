@@ -1,50 +1,95 @@
-# React + TypeScript + Vite
+# Irregular Verbs Learning App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A React application for learning irregular verbs with a Vercel-hosted API backend.
 
-Currently, two official plugins are available:
+## Project Structure
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+This project is structured as follows:
 
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
-
-- Configure the top-level `parserOptions` property like this:
-
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+```
+/
+├── src/                # Frontend React application
+│   ├── components/     # React components
+│   ├── api.ts          # API client for connecting to the backend
+│   └── ...
+├── api/                # Backend API for Vercel deployment
+│   ├── index.js        # Express server
+│   └── ...
+├── vercel.json         # Vercel configuration for monorepo deployment
+└── ...
 ```
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+## Frontend (React)
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+The frontend is a React application built with:
+- React 19
+- TypeScript
+- Tailwind CSS
+- shadcn/ui components
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
+## Backend (Vercel API)
+
+The backend is an Express.js API designed to be deployed on Vercel:
+- Express.js server
+- RESTful API endpoints
+- Vercel serverless functions
+
+## Development
+
+### Frontend
+
+```bash
+# Install dependencies
+npm install
+
+# Start development server
+npm run dev
+```
+
+### API
+
+```bash
+# Navigate to API directory
+cd api
+
+# Install dependencies
+npm install
+
+# Start API development server
+npm run dev
+```
+
+## Deployment
+
+This project is set up as a monorepo for deployment to Vercel. The `vercel.json` file in the root directory configures both the frontend and API to be deployed together.
+
+```bash
+# Deploy the entire project to Vercel
+vercel
+```
+
+With this setup:
+- The frontend will be served from the root URL (e.g., `https://your-app.vercel.app/`)
+- The API will be served from the `/api` path (e.g., `https://your-app.vercel.app/api/verbs`)
+
+## API Endpoints
+
+- `GET /api/verbs` - Get all irregular verbs
+- `GET /api/verbs/random` - Get a random irregular verb
+- `GET /api/verbs/:base` - Get a specific verb by its base form
+- `GET /api/scores` - Get all user scores
+- `GET /api/scores/:username` - Get scores for a specific user
+- `POST /api/scores` - Save a new score
+
+## Environment Variables
+
+Create a `.env` file in the root directory with the following variables:
+
+```
+# For development
+VITE_API_URL=http://localhost:3000
+
+# For production with monorepo deployment
+# For production
+# VITE_API_URL=https://your-vercel-api-url.vercel.app
 ```
